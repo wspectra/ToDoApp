@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/spf13/viper"
 	"github.com/wspectra/api_server/internal/handler"
 	"github.com/wspectra/api_server/internal/repository"
 	"github.com/wspectra/api_server/internal/server"
@@ -13,10 +14,16 @@ func main() {
 	repositories := repository.NewRepository()
 	services := service.NewService(repositories)
 	handlers := handler.NewHandler(services)
-	server := server.Server{}
+	serv := server.Server{}
 
 	//Run
-	if err := server.Run("8080", handlers.InitRoutes()); err != nil {
+	if err := serv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 		log.Fatalf("[SERVER]: %s", err.Error())
 	}
+}
+
+func initConfig() error {
+	viper.AddConfigPath("./configs")
+	viper.SetConfigName("config")
+	return viper.ReadInConfig()
 }
