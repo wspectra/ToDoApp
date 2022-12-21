@@ -11,7 +11,17 @@ import (
 
 func main() {
 	//init
-	repositories := repository.NewRepository()
+	if err := initConfig(); err != nil {
+		log.Fatalf("[CONFIG]: %s", err.Error())
+	}
+
+	db, err := repository.NewPostgresDB()
+
+	if err != nil {
+		log.Fatalf("[DATABASE]: %s", err.Error())
+	}
+
+	repositories := repository.NewRepository(db)
 	services := service.NewService(repositories)
 	handlers := handler.NewHandler(services)
 	serv := server.Server{}
