@@ -1,6 +1,6 @@
-package init
+package structure
 
-type todoList struct {
+type List struct {
 	Id          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -12,7 +12,7 @@ type UsersList struct {
 	ListId int
 }
 
-type TodoItem struct {
+type Item struct {
 	Id          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
