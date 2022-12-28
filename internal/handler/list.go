@@ -1,8 +1,17 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/wspectra/api_server/internal/pkg/utils"
+	"net/http"
+)
 
 func (h *Handler) createList(c *gin.Context) {
+	id, ok := c.Get(userCt)
+	if !ok {
+		utils.HttpResponseWriter(c.Writer, "user id not found", http.StatusInternalServerError)
+		return
+	}
 
 }
 

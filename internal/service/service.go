@@ -7,7 +7,8 @@ import (
 
 type Authorization interface {
 	AddNewUser(user structure.User) error
-	AuthorizeUser(user structure.User) error
+	GetToken(input structure.SignInUser) (string, error)
+	ParseToken(accessToken string) (int, error)
 }
 
 type List interface {

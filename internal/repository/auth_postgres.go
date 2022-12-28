@@ -25,13 +25,13 @@ func (a *AuthRepository) AddNewUser(user structure.User) error {
 	return nil
 }
 
-func (a *AuthRepository) AuthorizeUser(user structure.User) error {
+func (a *AuthRepository) AuthorizeUser(user structure.SignInUser) (int, error) {
 	var id int
 	row := a.db.QueryRow("select id from users where username = $1 and password_hash = $2", user.Username, user.Password)
 	err := row.Scan(&id)
 
 	if err != nil {
-		return err
+		return -1, err
 	}
-	return nil
+	return id, nil
 }

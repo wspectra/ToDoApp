@@ -7,7 +7,7 @@ import (
 
 type Authorization interface {
 	AddNewUser(user structure.User) error
-	AuthorizeUser(user structure.User) error
+	AuthorizeUser(user structure.SignInUser) (int, error)
 }
 
 type List interface {
