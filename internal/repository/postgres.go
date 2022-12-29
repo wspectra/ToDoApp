@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 
@@ -17,7 +17,7 @@ const (
 	listsItemsTable = "lists_items"
 )
 
-func NewPostgresDB() (*sql.DB, error) {
+func NewPostgresDB() (*sqlx.DB, error) {
 	dataSourceName := fmt.Sprintf("host=%s dbname=%s sslmode=%s password=%s user=%s port=%s",
 		viper.GetString("database.host"),
 		viper.GetString("database.db_name"),
@@ -26,7 +26,7 @@ func NewPostgresDB() (*sql.DB, error) {
 		viper.GetString("database.user"),
 		viper.GetString("database.port"))
 
-	db, err := sql.Open("postgres", dataSourceName)
+	db, err := sqlx.Open("postgres", dataSourceName)
 	if err != nil {
 		return nil, err
 	}

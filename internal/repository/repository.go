@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 	"github.com/wspectra/api_server/internal/structure"
 )
 
@@ -11,6 +11,9 @@ type Authorization interface {
 }
 
 type List interface {
+	CreateList(userId int, input structure.List) error
+	GetLists(userId int) ([]structure.List, error)
+	GetListById(userId int, listId int) (structure.List, error)
 }
 
 type Item interface {
@@ -22,8 +25,9 @@ type Repository struct {
 	Item
 }
 
-func NewRepository(db *sql.DB) *Repository {
+func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthRepository(db),
+		List:          NewListPostgres(db),
 	}
 }
