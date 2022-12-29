@@ -57,3 +57,39 @@ func (l *ListPostgres) GetListById(userId int, listId int) (structure.List, erro
 	return lists, nil
 
 }
+
+func (l *ListPostgres) DeleteList(listId int) error {
+	query := "DELETE FROM todo_lists  WHERE id = $1"
+	if _, err := l.db.Exec(query, listId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *ListPostgres) UpdateListTitle(listId int, input structure.UpdateListInput) error {
+	query := "UPDATE todo_lists SET title = $1 WHERE id = $2"
+	if _, err := l.db.Exec(query, input.Title, listId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *ListPostgres) UpdateListDescription(listId int, input structure.UpdateListInput) error {
+	query := "UPDATE todo_lists SET description = $1 WHERE id = $2"
+	if _, err := l.db.Exec(query, input.Description, listId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *ListPostgres) UpdateListTitleAndDescription(listId int, input structure.UpdateListInput) error {
+	query := "UPDATE todo_lists SET description = $1, title = $2  WHERE id = $3"
+	if _, err := l.db.Exec(query, input.Description, input.Title, listId); err != nil {
+		return err
+	}
+
+	return nil
+}

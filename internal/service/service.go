@@ -15,6 +15,8 @@ type List interface {
 	CreateList(userId int, input structure.List) error
 	GetLists(userId int) ([]structure.List, error)
 	GetListById(userId int, listId int) (structure.List, error)
+	UpdateList(listId int, input structure.UpdateListInput) error
+	DeleteList(listId int) error
 }
 
 type Item interface {
