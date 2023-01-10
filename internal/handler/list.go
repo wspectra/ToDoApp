@@ -64,6 +64,7 @@ func (h *Handler) getListById(c *gin.Context) {
 		utils.HttpResponseWriter(c.Writer, err.Error(), http.StatusBadRequest)
 		return
 	}
+
 	ListsResponse := struct {
 		Message structure.List
 	}{lists}

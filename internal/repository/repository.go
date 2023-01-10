@@ -21,6 +21,13 @@ type List interface {
 }
 
 type Item interface {
+	CreateItem(listId int, input structure.Item) error
+	GetItems(listId int) ([]structure.Item, error)
+	GetItemById(listId int, itemId int) (structure.Item, error)
+	DeleteItem(itemId int) error
+	UpdateItemTitle(itemId int, input structure.UpdateItemInput) error
+	UpdateItemDescription(itemId int, input structure.UpdateItemInput) error
+	UpdateItemDone(itemId int, input structure.UpdateItemInput) error
 }
 
 type Repository struct {
@@ -33,5 +40,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthRepository(db),
 		List:          NewListPostgres(db),
+		Item:          NewItemPostgres(db),
 	}
 }
