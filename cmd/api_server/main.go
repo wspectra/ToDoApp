@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
@@ -8,6 +9,9 @@ import (
 	"github.com/wspectra/api_server/internal/repository"
 	"github.com/wspectra/api_server/internal/server"
 	"github.com/wspectra/api_server/internal/service"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -29,10 +33,26 @@ func main() {
 	serv := server.Server{}
 
 	//Run
-	if err := serv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		log.Fatal().Msg("[SERVER]:" + err.Error())
-	}
 	log.Info().Msg("starting api_server on port" + viper.GetString("port"))
+
+	go func() {
+		if err := serv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			log.Fatal().Msg("[SERVER]:" + err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	log.Info().Msg("shut  ting down api_server" + viper.GetString("port"))
+	if err := serv.Shutdown(context.Background()); err != nil {
+		log.Error().Msg("[SERVER]: error during shutting down" + err.Error())
+	}
+
+	if err := db.Close(); err != nil {
+		log.Error().Msg("[DATABASE]: error during closing connection to database" + err.Error())
+	}
 }
 
 func initConfig() error {
