@@ -2,7 +2,11 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/files"       // swagger embed files
+	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"github.com/wspectra/ToDoApp/internal/service"
+
+	_ "github.com/wspectra/ToDoApp/docs"
 )
 
 type Handler struct {
@@ -31,6 +35,8 @@ func CORSMiddleware() gin.HandlerFunc {
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Use(CORSMiddleware())
 
 	auth := router.Group("/auth")

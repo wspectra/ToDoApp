@@ -14,6 +14,16 @@ import (
 	"syscall"
 )
 
+// @title           ToDoApp
+// @version         1.0
+// @description     This is a simple todo list app
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @securitydefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	//structure
 	if err := initConfig(); err != nil {
