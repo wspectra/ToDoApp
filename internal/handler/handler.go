@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wspectra/api_server/internal/service"
+	"github.com/wspectra/ToDoApp/internal/service"
 )
 
 type Handler struct {

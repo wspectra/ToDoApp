@@ -2,8 +2,8 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wspectra/api_server/internal/pkg/utils"
-	"github.com/wspectra/api_server/internal/structure"
+	"github.com/wspectra/ToDoApp/internal/pkg/utils"
+	"github.com/wspectra/ToDoApp/internal/structure"
 	"net/http"
 	"strconv"
 )

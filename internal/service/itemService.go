@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"github.com/wspectra/api_server/internal/repository"
-	"github.com/wspectra/api_server/internal/structure"
+	"github.com/wspectra/ToDoApp/internal/repository"
+	"github.com/wspectra/ToDoApp/internal/structure"
 )
 
 type ItemService struct {

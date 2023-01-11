@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/wspectra/api_server/internal/pkg/utils"
-	"github.com/wspectra/api_server/internal/repository"
-	"github.com/wspectra/api_server/internal/structure"
+	"github.com/wspectra/ToDoApp/internal/pkg/utils"
+	"github.com/wspectra/ToDoApp/internal/repository"
+	"github.com/wspectra/ToDoApp/internal/structure"
 	"time"
 )
 

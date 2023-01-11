@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/wspectra/api_server/internal/structure"
+	"github.com/wspectra/ToDoApp/internal/structure"
 )
 
 type AuthRepository struct {
