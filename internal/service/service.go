@@ -5,6 +5,8 @@ import (
 	"github.com/wspectra/ToDoApp/internal/structure"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/serviceMocks.go
+
 type Authorization interface {
 	AddNewUser(user structure.User) error
 	GetToken(input structure.SignInUser) (string, error)

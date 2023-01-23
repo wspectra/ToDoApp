@@ -5,6 +5,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/wspectra/ToDoApp/internal/pkg/utils"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -26,12 +28,24 @@ func NewPostgresDB() (*sqlx.DB, error) {
 		viper.GetString("database.user"),
 		viper.GetString("database.port"))
 
-	db, err := sqlx.Open("postgres", dataSourceName)
-	if err != nil {
-		return nil, err
-	}
+	log.Log().Msg(dataSourceName)
 
-	if err := db.Ping(); err != nil {
+	var db *sqlx.DB
+
+	err := utils.DoWithTries(func() error {
+		var err error
+		db, err = sqlx.Open("postgres", dataSourceName)
+		if err != nil {
+			return err
+		}
+		err = db.Ping()
+		if err != nil {
+			return err
+		}
+		return nil
+	}, 10, 5*time.Second)
+
+	if err != nil {
 		return nil, err
 	}
 

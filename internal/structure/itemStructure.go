@@ -12,3 +12,13 @@ type UpdateItemInput struct {
 	Description *string `json:"description"`
 	Done        *bool   `json:"done"`
 }
+
+type AllItemResponse struct {
+	Status  string
+	Message []Item
+}
+
+type ItemResponse struct {
+	Status  string
+	Message Item
+}

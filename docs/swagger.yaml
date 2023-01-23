@@ -1,0 +1,495 @@
+basePath: /
+definitions:
+  structure.AllItemResponse:
+    properties:
+      message:
+        items:
+          $ref: '#/definitions/structure.Item'
+        type: array
+      status:
+        type: string
+    type: object
+  structure.AllListResponse:
+    properties:
+      message:
+        items:
+          $ref: '#/definitions/structure.List'
+        type: array
+      status:
+        type: string
+    type: object
+  structure.Item:
+    properties:
+      description:
+        type: string
+      done:
+        type: boolean
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  structure.ItemResponse:
+    properties:
+      message:
+        $ref: '#/definitions/structure.Item'
+      status:
+        type: string
+    type: object
+  structure.List:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  structure.ListResponse:
+    properties:
+      message:
+        $ref: '#/definitions/structure.List'
+      status:
+        type: string
+    type: object
+  structure.SignInUser:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  structure.UpdateItemInput:
+    properties:
+      description:
+        type: string
+      done:
+        type: boolean
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  structure.UpdateListInput:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  structure.User:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  utils.ResponseStruct:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a simple todo list app
+  title: ToDoApp
+  version: "1.0"
+paths:
+  /api/list:
+    get:
+      description: returns all lists of the list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.AllListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: getAllLists
+      tags:
+      - List
+    post:
+      consumes:
+      - application/json
+      description: create list
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.List'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: createList
+      tags:
+      - List
+  /api/list/:id:
+    delete:
+      consumes:
+      - application/json
+      description: delete list
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: deleteList
+      tags:
+      - List
+    get:
+      description: return information about list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.ListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: getListById
+      tags:
+      - List
+    put:
+      consumes:
+      - application/json
+      description: update list
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.UpdateListInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: updateList
+      tags:
+      - List
+  /api/list/:id/items:
+    get:
+      description: returns all items of the list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.AllItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: getAllItems
+      tags:
+      - Item
+    post:
+      consumes:
+      - application/json
+      description: create item
+      parameters:
+      - description: item info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: createItem
+      tags:
+      - Item
+  /api/list/:id/items/:item_id:
+    delete:
+      consumes:
+      - application/json
+      description: delete item
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: deleteItem
+      tags:
+      - Item
+    get:
+      description: return information about item
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/structure.ItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: getItemById
+      tags:
+      - Item
+    put:
+      consumes:
+      - application/json
+      description: update item
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.UpdateItemInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      security:
+      - ApiKeyAuth: []
+      summary: updateItem
+      tags:
+      - Item
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.SignInUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      summary: SignIn
+      tags:
+      - Auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/structure.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ResponseStruct'
+      summary: SignUp
+      tags:
+      - Auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

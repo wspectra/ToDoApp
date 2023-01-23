@@ -8,6 +8,18 @@ import (
 	"strconv"
 )
 
+// @Summary      createItem
+// @Security	 ApiKeyAuth
+// @Tags         Item
+// @Description  create item
+// @Accept       json
+// @Produce      json
+// @Param        input body structure.Item true "item info"
+// @Success      200  {object} utils.ResponseStruct
+// @Failure      400  {object}  utils.ResponseStruct
+// @Failure      401  {object}  utils.ResponseStruct
+// @Failure      500  {object}  utils.ResponseStruct
+// @Router       /api/list/:id/items [post]
 func (h *Handler) createItem(c *gin.Context) {
 	userId, ok := c.Get(userCt)
 	if !ok {
@@ -37,6 +49,16 @@ func (h *Handler) createItem(c *gin.Context) {
 
 }
 
+// @Summary      getAllItems
+// @Security	 ApiKeyAuth
+// @Tags         Item
+// @Description  returns all items of the list
+// @Produce      json
+// @Success      200  {object} structure.AllItemResponse
+// @Failure      400  {object}  utils.ResponseStruct
+// @Failure      401  {object}  utils.ResponseStruct
+// @Failure      500  {object}  utils.ResponseStruct
+// @Router       /api/list/:id/items [get]
 func (h *Handler) getAllItems(c *gin.Context) {
 	userId, ok := c.Get(userCt)
 	if !ok {
@@ -56,14 +78,23 @@ func (h *Handler) getAllItems(c *gin.Context) {
 		return
 	}
 
-	ListsResponse := struct {
-		status  string
-		Message []structure.Item
-	}{"success",
-		output}
+	ListsResponse := structure.AllItemResponse{
+		Status:  "success",
+		Message: output,
+	}
 	c.JSON(http.StatusOK, ListsResponse)
 }
 
+// @Summary      getItemById
+// @Security	 ApiKeyAuth
+// @Tags         Item
+// @Description  return information about item
+// @Produce      json
+// @Success      200  {object} structure.ItemResponse
+// @Failure      400  {object}  utils.ResponseStruct
+// @Failure      401  {object}  utils.ResponseStruct
+// @Failure      500  {object}  utils.ResponseStruct
+// @Router       /api/list/:id/items/:item_id [get]
 func (h *Handler) getItemById(c *gin.Context) {
 	userId, ok := c.Get(userCt)
 	if !ok {
@@ -89,14 +120,24 @@ func (h *Handler) getItemById(c *gin.Context) {
 		return
 	}
 
-	ListsResponse := struct {
-		status  string
-		Message structure.Item
-	}{"success",
-		output}
+	ListsResponse := structure.ItemResponse{
+		Status:  "success",
+		Message: output}
 	c.JSON(http.StatusOK, ListsResponse)
 }
 
+// @Summary      updateItem
+// @Security	 ApiKeyAuth
+// @Tags         Item
+// @Description  update item
+// @Accept       json
+// @Produce      json
+// @Param        input body structure.UpdateItemInput true "account info"
+// @Success      200  {object} utils.ResponseStruct
+// @Failure      400  {object}  utils.ResponseStruct
+// @Failure      401  {object}  utils.ResponseStruct
+// @Failure      500  {object}  utils.ResponseStruct
+// @Router       /api/list/:id/items/:item_id [put]
 func (h *Handler) updateItem(c *gin.Context) {
 	userId, ok := c.Get(userCt)
 	if !ok {
@@ -129,6 +170,18 @@ func (h *Handler) updateItem(c *gin.Context) {
 	utils.HttpResponseWriter(c.Writer, "item updated successfully", http.StatusOK)
 }
 
+// @Summary      deleteItem
+// @Security	 ApiKeyAuth
+// @Tags         Item
+// @Description  delete item
+// @Accept       json
+// @Produce      json
+// @Param        input body structure.User true "account info"
+// @Success      200  {object} utils.ResponseStruct
+// @Failure      400  {object}  utils.ResponseStruct
+// @Failure      401  {object}  utils.ResponseStruct
+// @Failure      500  {object}  utils.ResponseStruct
+// @Router       /api/list/:id/items/:item_id [delete]
 func (h *Handler) deleteItem(c *gin.Context) {
 	userId, ok := c.Get(userCt)
 	if !ok {

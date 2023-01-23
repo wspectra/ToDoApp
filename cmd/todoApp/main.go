@@ -43,7 +43,7 @@ func main() {
 	serv := server.Server{}
 
 	//Run
-	log.Info().Msg("starting api_server on port" + viper.GetString("port"))
+	log.Info().Msg("starting todoApp on port" + viper.GetString("port"))
 
 	go func() {
 		if err := serv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
@@ -55,7 +55,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
-	log.Info().Msg("shut  ting down api_server" + viper.GetString("port"))
+	log.Info().Msg("shut  ting down todoApp" + viper.GetString("port"))
 	if err := serv.Shutdown(context.Background()); err != nil {
 		log.Error().Msg("[SERVER]: error during shutting down" + err.Error())
 	}

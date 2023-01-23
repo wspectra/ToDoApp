@@ -10,3 +10,13 @@ type UpdateListInput struct {
 	Title       *string `json:"title"`
 	Description *string `json:"description"`
 }
+
+type AllListResponse struct {
+	Status  string
+	Message []List
+}
+
+type ListResponse struct {
+	Status  string
+	Message List
+}
