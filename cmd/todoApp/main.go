@@ -55,7 +55,7 @@ func main() {
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
-	log.Info().Msg("shut  ting down todoApp" + viper.GetString("port"))
+	log.Info().Msg("shutting down todoApp" + viper.GetString("port"))
 	if err := serv.Shutdown(context.Background()); err != nil {
 		log.Error().Msg("[SERVER]: error during shutting down" + err.Error())
 	}

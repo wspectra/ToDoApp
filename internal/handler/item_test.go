@@ -2,7 +2,7 @@ package handler
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/magiconair/properties/assert"
@@ -22,7 +22,7 @@ func TestHandler_createItem(t *testing.T) {
 		userId             int
 		listId             int
 		inputBody          string
-		setUserId          func()
+		setUserId          func(c *gin.Context)
 		inputItem          structure.Item
 		mockBehavior       mockBehavior
 		expectedStatusCode int
@@ -37,8 +37,14 @@ func TestHandler_createItem(t *testing.T) {
 				Title:       "test",
 				Description: "test",
 			},
-			setUserId: func() {
-
+			setUserId: func(context *gin.Context) {
+				context.Set(userCt, 1)
+				context.Params = []gin.Param{
+					{
+						Key:   "id",
+						Value: "1",
+					},
+				}
 			},
 			mockBehavior: func(s *mock_service.MockItem, userId int, listId int, item structure.Item) {
 				s.EXPECT().CreateItem(userId, listId, item).Return(nil)
@@ -47,18 +53,84 @@ func TestHandler_createItem(t *testing.T) {
 			expectedResponse:   "{\"Status\":\"success\",\"Message\":\"item created successfully\"}\n",
 		},
 		{
-			name:      "wrong userId",
+			name:      "wrong user Id",
+			inputBody: `{"Title":"test","Description":"test"}`,
+			inputItem: structure.Item{
+				Title:       "test",
+				Description: "test",
+			},
+			setUserId:          func(context *gin.Context) {},
+			mockBehavior:       func(s *mock_service.MockItem, userId int, listId int, item structure.Item) {},
+			expectedStatusCode: 500,
+			expectedResponse:   "{\"Status\":\"fail\",\"Message\":\"user id not found\"}\n",
+		},
+		{
+			name:      "wrong list Id",
+			userId:    1,
 			listId:    1,
 			inputBody: `{"Title":"test","Description":"test"}`,
 			inputItem: structure.Item{
 				Title:       "test",
 				Description: "test",
 			},
-			mockBehavior: func(s *mock_service.MockItem, userId int, listId int, item structure.Item) {
-				s.EXPECT().CreateItem(userId, listId, item).Return(nil)
+			setUserId: func(context *gin.Context) {
+				context.Set(userCt, 1)
+				context.Params = []gin.Param{
+					{
+						Key:   "id",
+						Value: "qqq",
+					},
+				}
 			},
-			expectedStatusCode: 200,
-			expectedResponse:   "{\"Status\":\"success\",\"Message\":\"item created successfully\"}\n",
+			mockBehavior:       func(s *mock_service.MockItem, userId int, listId int, item structure.Item) {},
+			expectedStatusCode: 500,
+			expectedResponse:   "{\"Status\":\"fail\",\"Message\":\"invalid id param\"}\n",
+		},
+		{
+			name:      "wrong JSON",
+			userId:    1,
+			listId:    1,
+			inputBody: `{"test":"test","Description":"test"}`,
+			inputItem: structure.Item{
+				Title:       "test",
+				Description: "test",
+			},
+			setUserId: func(context *gin.Context) {
+				context.Set(userCt, 1)
+				context.Params = []gin.Param{
+					{
+						Key:   "id",
+						Value: "1",
+					},
+				}
+			},
+			mockBehavior:       func(s *mock_service.MockItem, userId int, listId int, item structure.Item) {},
+			expectedStatusCode: 400,
+			expectedResponse:   "{\"Status\":\"fail\",\"Message\":\"Key: 'Item.Title' Error:Field validation for 'Title' failed on the 'required' tag\"}\n",
+		},
+		{
+			name:      "some error",
+			userId:    1,
+			listId:    1,
+			inputBody: `{"Title":"test","Description":"test"}`,
+			inputItem: structure.Item{
+				Title:       "test",
+				Description: "test",
+			},
+			setUserId: func(context *gin.Context) {
+				context.Set(userCt, 1)
+				context.Params = []gin.Param{
+					{
+						Key:   "id",
+						Value: "1",
+					},
+				}
+			},
+			mockBehavior: func(s *mock_service.MockItem, userId int, listId int, item structure.Item) {
+				s.EXPECT().CreateItem(userId, listId, item).Return(errors.New("some error"))
+			},
+			expectedStatusCode: 500,
+			expectedResponse:   "{\"Status\":\"fail\",\"Message\":\"some error\"}\n",
 		},
 	}
 
@@ -77,15 +149,7 @@ func TestHandler_createItem(t *testing.T) {
 			handler := NewHandler(serv)
 
 			router := gin.New()
-			router.POST("/item", func(context *gin.Context) {
-				context.Set(userCt, testCase.userId)
-				context.Params = []gin.Param{
-					{
-						Key:   "id",
-						Value: fmt.Sprintf("%d", testCase.listId),
-					},
-				}
-			}, handler.createItem)
+			router.POST("/item", testCase.setUserId, handler.createItem)
 
 			rec := httptest.NewRecorder()
 			req := httptest.NewRequest("POST", "/item", bytes.NewBufferString(testCase.inputBody))
