@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/wspectra/ToDoApp/internal/config"
 	"github.com/wspectra/ToDoApp/internal/handler"
+	"github.com/wspectra/ToDoApp/internal/logger"
 	"github.com/wspectra/ToDoApp/internal/repository"
 	"github.com/wspectra/ToDoApp/internal/server"
 	"github.com/wspectra/ToDoApp/internal/service"
@@ -26,11 +27,11 @@ import (
 // @name Authorization
 func main() {
 	//structure
-	if err := initConfig(); err != nil {
+	if err := config.InitConfig(); err != nil {
 		log.Fatal().Msg("[CONFIG]:" + err.Error())
 	}
 
-	initLogger()
+	logger.InitLogger()
 	db, err := repository.NewPostgresDB()
 
 	if err != nil {
@@ -62,26 +63,5 @@ func main() {
 
 	if err := db.Close(); err != nil {
 		log.Error().Msg("[DATABASE]: error during closing connection to database" + err.Error())
-	}
-}
-
-func initConfig() error {
-	viper.AddConfigPath("./configs")
-	viper.SetConfigName("config")
-	return viper.ReadInConfig()
-}
-
-func initLogger() {
-	switch viper.GetString("log_level") {
-	case "info":
-		zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	case "debug":
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	case "error":
-		zerolog.SetGlobalLevel(zerolog.ErrorLevel)
-	case "disabled":
-		zerolog.SetGlobalLevel(zerolog.Disabled)
-	default:
-		log.Fatal().Msg("[CONFIG]: wrong config")
 	}
 }
